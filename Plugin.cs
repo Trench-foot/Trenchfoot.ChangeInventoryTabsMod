@@ -1,5 +1,7 @@
 ﻿using BepInEx;
+using Comfort.Common;
 using EFT.UI;
+using HarmonyLib;
 using System;
 using System.Reflection;
 using UnityEngine;
@@ -10,81 +12,44 @@ namespace KzTarkov.ChangeInventoryTabsMod
     [BepInDependency("com.SPT.core", "3.9.4")]
     public class ChangeTabsPlugin : BaseUnityPlugin
     {
+        private const string GCLASS_FIELD_NAME = "gclass3087_0";
+        private const string ALL_TABS_FIELD_NAME = "tab_0";
+        private const string CURRENT_TAB_FIELD_NAME = "tab_1";
+
+        private static FieldInfo _gclass = null;
+        private static FieldInfo _allTabs = null;
+        private static FieldInfo _currentTab = null;
+
         private void Awake()
         {
             Settings.Init(Config);
         }
 
-        void Start()
-        {
-            Logger.LogInfo("SetSpeedPlugin loaded");
-
-        }
-
-        void Update()
+        private void Update()
         {
             if (Input.GetKeyDown(Settings.NexTabKey.Value.MainKey))
             {
-                GClass3087 gclass = getInventroyScreenGclass();
-                if (gclass == null)
-                {
-                    return;
-                }
-                shiftTab(gclass, +1);
+                ShiftTab(+1);
             }
 
             if (Input.GetKeyDown(Settings.PrevTabKey.Value.MainKey))
             {
-                GClass3087 gclass = getInventroyScreenGclass();
-                if (gclass == null)
-                {
-                    return;
-                }
-                shiftTab(gclass, -1);
+                ShiftTab(-1);
             }
-        }
-
-        private GClass3087 getInventroyScreenGclass()
-        {
-            GameObject obj = GameObject.Find("InventoryScreen");
-            if (obj == null)
-            {
-                Logger.LogInfo("Inventory screen not found");
-                return null;
-            }
-
-            InventoryScreen inventoryScreen = obj.GetComponent<InventoryScreen>();
-            if (inventoryScreen == null)
-            {
-                Logger.LogInfo("Could not get component InventoryScreen");
-                return null;
-            }
-            Logger.LogInfo("Trying to get gclass");
-            Type type = typeof(InventoryScreen);
-            FieldInfo prviateField = type.GetField("gclass3087_0", BindingFlags.NonPublic | BindingFlags.Instance);
-            return (GClass3087)prviateField.GetValue(inventoryScreen);
-        }
-
-        private Tab[] getAllTabs(GClass3087 gclass)
-        {
-            Type type = typeof(GClass3087);
-            FieldInfo tabsPrivateField = type.GetField("tab_0", BindingFlags.NonPublic | BindingFlags.Instance);
-            return (Tab[])tabsPrivateField.GetValue(gclass);
-        }
-
-        private Tab getCurrentTab(GClass3087 gclass)
-        {
-            Type type = typeof(GClass3087);
-            FieldInfo tabsPrivateField = type.GetField("tab_1", BindingFlags.NonPublic | BindingFlags.Instance);
-            return (Tab)tabsPrivateField.GetValue(gclass);
         }
 
         // shift = +1/-1
         // shift can be either + 1 or -1
-        private void shiftTab(GClass3087 gclass, int shift)
+        private void ShiftTab(int shift)
         {
-            Tab currentTab = getCurrentTab(gclass);
-            Tab[] allTabs = getAllTabs(gclass);
+            GClass3087 gclass = GetInventroyScreenGclass();
+            if (gclass == null)
+            {
+                Logger.LogInfo("GClass is null");
+                return;
+            }
+            Tab currentTab = GetCurrentTab(gclass);
+            Tab[] allTabs = GetAllTabs(gclass);
 
             int currentTabIndex = -1;
             for (int i = 0; i < allTabs.Length; i++)
@@ -98,7 +63,7 @@ namespace KzTarkov.ChangeInventoryTabsMod
 
             if (currentTabIndex == -1)
             {
-                // do nothing since bad shit happened
+                // do nothing since bad shit happened, probably mod is incompatible anymore
                 Logger.LogInfo("Could not find current tab index");
                 return;
             }
@@ -110,13 +75,54 @@ namespace KzTarkov.ChangeInventoryTabsMod
                 return;
             }
 
-            selectTab(gclass, allTabs[shiftedIndex]);
+            SelectTab(gclass, allTabs[shiftedIndex]);
         }
 
-        private void selectTab(GClass3087 gclass, Tab tab)
+        private GClass3087 GetInventroyScreenGclass()
+        {
+            var inventoryScreen = Singleton<CommonUI>.Instance.InventoryScreen;
+
+            if (inventoryScreen == null)
+            {
+                return null;
+            }
+
+            Type type = typeof(InventoryScreen);
+            if (_gclass == null)
+            {
+                _gclass = AccessTools.Field(type, "gclass3087_0");
+            }
+
+            return (GClass3087)_gclass.GetValue(inventoryScreen);
+        }
+        private Tab GetCurrentTab(GClass3087 gclass)
+        {
+            Type type = typeof(GClass3087);
+
+            if (_currentTab == null)
+            {
+                Logger.LogInfo("caching type of _currentTab");
+                _currentTab = AccessTools.Field(type, CURRENT_TAB_FIELD_NAME);
+            }
+
+            return (Tab)_currentTab.GetValue(gclass);
+        }
+        private Tab[] GetAllTabs(GClass3087 gclass)
+        {
+            Type type = typeof(GClass3087);
+
+            if (_allTabs == null)
+            {
+                Logger.LogInfo("caching type of _allTabs");
+                _allTabs = AccessTools.Field(type, ALL_TABS_FIELD_NAME);
+            }
+
+            return (Tab[])_allTabs.GetValue(gclass);
+        }
+
+        private void SelectTab(GClass3087 gclass, Tab tab)
         {
             gclass.method_0(tab, true);
-            //gclass.SelectTab(tabs[0], true);
         }
     }
 }
