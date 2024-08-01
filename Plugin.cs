@@ -5,10 +5,11 @@ using HarmonyLib;
 using System;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace KzTarkov.ChangeInventoryTabsMod
 {
-    [BepInPlugin("KzTarkov.ChangeTabsMod", "KzTarkovChangeTabsMod", "1.0.0")]
+    [BepInPlugin("KzTarkov.ChangeTabsMod", "KzTarkovChangeTabsMod", "1.0.2")]
     [BepInDependency("com.SPT.core", "3.9.4")]
     public class ChangeTabsPlugin : BaseUnityPlugin
     {
@@ -25,17 +26,31 @@ namespace KzTarkov.ChangeInventoryTabsMod
             Settings.Init(Config);
         }
 
+        private bool isInputFieldFocused()
+        {
+            if (
+                EventSystem.current.currentSelectedGameObject != null
+                && EventSystem.current.currentSelectedGameObject.GetComponent<TMPro.TMP_InputField>() != null)
+            {
+                return true;
+            }
+            return false;
+        }
         private void Update()
         {
-            if (Input.GetKeyDown(Settings.NexTabKey.Value.MainKey))
+            if (!isInputFieldFocused())
             {
-                ShiftTab(+1);
+                if (Input.GetKeyDown(Settings.NexTabKey.Value.MainKey))
+                {
+                    ShiftTab(+1);
+                }
+
+                if (Input.GetKeyDown(Settings.PrevTabKey.Value.MainKey))
+                {
+                    ShiftTab(-1);
+                }
             }
 
-            if (Input.GetKeyDown(Settings.PrevTabKey.Value.MainKey))
-            {
-                ShiftTab(-1);
-            }
         }
 
         // shift = +1/-1
