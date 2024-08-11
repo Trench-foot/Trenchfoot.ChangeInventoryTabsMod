@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 namespace KzTarkov.ChangeInventoryTabsMod
 {
     [BepInPlugin("KzTarkov.ChangeTabsMod", "KzTarkovChangeTabsMod", "1.0.2")]
-    [BepInDependency("com.SPT.core", "3.9.4")]
+    [BepInDependency("com.SPT.core", "3.9.0")]
     public class ChangeTabsPlugin : BaseUnityPlugin
     {
         private const string GCLASS_FIELD_NAME = "gclass3087_0";
@@ -20,7 +20,7 @@ namespace KzTarkov.ChangeInventoryTabsMod
         private static FieldInfo _gclass = null;
         private static FieldInfo _allTabs = null;
         private static FieldInfo _currentTab = null;
-
+            
         private void Awake()
         {
             Settings.Init(Config);
@@ -36,21 +36,32 @@ namespace KzTarkov.ChangeInventoryTabsMod
             }
             return false;
         }
+
+        private bool isInventoryScreenFocus()
+        {
+            return ItemUiContext.Instance.ContextType == EItemUiContextType.InventoryScreen;
+        }
         private void Update()
         {
-            if (!isInputFieldFocused())
+            // do not trigger if inventory screen is not focused or input field is focused
+            if (!isInventoryScreenFocus() || isInputFieldFocused())
             {
-                if (Input.GetKeyDown(Settings.NexTabKey.Value.MainKey))
-                {
-                    ShiftTab(+1);
-                }
-
-                if (Input.GetKeyDown(Settings.PrevTabKey.Value.MainKey))
-                {
-                    ShiftTab(-1);
-                }
+                return;
             }
 
+            if (Input.GetKeyDown(Settings.NexTabKey.Value.MainKey))
+            {
+                Logger.LogInfo($"inventory scren on focus: {isInventoryScreenFocus()}");
+
+                ShiftTab(+1);
+            }
+
+            if (Input.GetKeyDown(Settings.PrevTabKey.Value.MainKey) && isInventoryScreenFocus())
+            {
+                Logger.LogInfo($"inventory scren on focus: {isInventoryScreenFocus()}");
+
+                ShiftTab(-1);
+            }
         }
 
         // shift = +1/-1
