@@ -1,7 +1,7 @@
 using BepInEx.Configuration;
 using UnityEngine;
 
-namespace KzTarkov.ChangeInventoryTabsMod
+namespace Trenchfoot.ChangeInventoryTabsMod
 {
     internal class Settings
     {
