@@ -31,7 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Reference Include="Comfort.Unity, Version=1.0.0.4, Culture=neutral, PublicKeyToken=null" />
+=======
+>>>>>>> 8897dd03dcfc870075df8945722f1e8cdd74dac5
     <Reference Include="Sirenix.Serialization">
       <HintPath>..\..\..\SP-Tarkov\EscapeFromTarkov_Data\Managed\Sirenix.Serialization.dll</HintPath>
     </Reference>

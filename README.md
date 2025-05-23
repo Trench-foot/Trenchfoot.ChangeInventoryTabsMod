@@ -1,1 +1,1 @@
-# KzTarkov.ChangeInventoryTabsMod
+# Trenchfoot.ChangeInventoryTabsMod

@@ -19,7 +19,10 @@ namespace Trenchfoot.ChangeInventoryTabsMod
     public class ChangeTabsPlugin : BaseUnityPlugin
     {
         private const string GCLASS_FIELD_NAME = "gclass3521_0";
+<<<<<<< HEAD
         private const string MCLASS_FIELD_NAME = "gclass3587_0";
+=======
+>>>>>>> 8897dd03dcfc870075df8945722f1e8cdd74dac5
         private const string ALL_TABS_FIELD_NAME = "tab_0";
         private const string CURRENT_TAB_FIELD_NAME = "tab_2";
 
@@ -28,7 +31,12 @@ namespace Trenchfoot.ChangeInventoryTabsMod
         private static FieldInfo _allTabs = null;
         private static FieldInfo _currentTab = null;
 
+<<<<<<< HEAD
         private bool enableLogging = true;
+=======
+
+        private bool enableLogging = false;
+>>>>>>> 8897dd03dcfc870075df8945722f1e8cdd74dac5
             
         private void Awake()
         {
@@ -91,15 +99,25 @@ namespace Trenchfoot.ChangeInventoryTabsMod
 
         private void Update()
         {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8897dd03dcfc870075df8945722f1e8cdd74dac5
             if (Input.GetKeyDown(Settings.NexTabKey.Value.MainKey))
             {
                 // do not trigger if inventory screen is not focused or input field is focused
                 if (!isInventoryScreenFocus() || isInputFieldFocused())
                 {
                     return;
+<<<<<<< HEAD
                 }
                 else
                 {
+=======
+                } 
+                else
+                { 
+>>>>>>> 8897dd03dcfc870075df8945722f1e8cdd74dac5
                     ShiftTab(+1);
                 }
             }
@@ -112,6 +130,7 @@ namespace Trenchfoot.ChangeInventoryTabsMod
                     return;
                 }
                 else
+<<<<<<< HEAD
                 {
                     ShiftTab(-1);
                 }
@@ -141,6 +160,11 @@ namespace Trenchfoot.ChangeInventoryTabsMod
                 }
 
                 _tarkovApplication.method_53(EMenuType.Player, true);
+=======
+                { 
+                    ShiftTab(-1);
+                }
+>>>>>>> 8897dd03dcfc870075df8945722f1e8cdd74dac5
             }
         }
 
