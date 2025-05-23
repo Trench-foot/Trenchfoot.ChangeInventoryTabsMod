@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.10.35027.167
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34601.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KzTarkov.ChangeInventoryTabsMod", "KzTarkov.ChangeInventoryTabsMod.csproj", "{929BA00A-84B8-4760-B97A-543C6DDCA97D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trenchfoot.ChangeInventoryTabsMod", "Trenchfoot.ChangeInventoryTabsMod.csproj", "{929BA00A-84B8-4760-B97A-543C6DDCA97D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
